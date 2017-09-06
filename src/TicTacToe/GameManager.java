@@ -5,7 +5,7 @@ import java.util.Scanner;
 class GameManager {
     private char[][] board = new char[3][3];
     private static final char[] SYMBOLS = {'O', 'X'};
-    int player;
+    private int player;
 
     GameManager(int n) {
         switch (n) {
@@ -13,7 +13,7 @@ class GameManager {
                 System.out.println("Player1 vs Player2\n");
                 break;
             case 2:
-                System.out.println("Player1 vs random COM\n");
+                System.out.println("Player1 vs COM\n");
                 break;
             default:
                 System.out.println("Please enter 1 or 2");
@@ -23,10 +23,18 @@ class GameManager {
         boolean gameFinish = false;
 
         while (!gameFinish) {
-            System.out.println("Player" + player + ": make your move");
-            Scanner scan = new Scanner(System.in);
-            int x = scan.nextInt();
-            int y = scan.nextInt();
+
+            int x = 0, y = 0;
+            if (n == 2 && player == 2) {
+                System.out.println("COM: make your move");
+                x = COM();
+                y = COM();
+            } else {
+                System.out.println("Player" + player + ": make your move");
+                Scanner scan = new Scanner(System.in);
+                x = scan.nextInt();
+                y = scan.nextInt();
+            }
 
             if (!checkInput(x, y)) {
                 continue;
@@ -50,6 +58,10 @@ class GameManager {
                 return 1;
         }
         return 0;
+    }
+
+    private int COM() {
+        return (int) (Math.random() * 100 % 3 + 1);
     }
 
     private void displayBoard() {
@@ -79,7 +91,7 @@ class GameManager {
                 ((board[2][0] == 'O' || board[2][0] == 'X') && (board[2][0] == board[2][1] && board[2][0] == board[2][2])) ||
                 ((board[0][0] == 'O' || board[0][0] == 'X') && (board[0][0] == board[1][1] && board[0][0] == board[2][2])) ||
                 ((board[0][2] == 'O' || board[0][2] == 'X') && (board[0][2] == board[1][1] && board[0][2] == board[2][0]))) {
-            System.out.println("Player" + player + " WIN!");
+            System.out.println("Player" + player + " WIN!\nGAME OVER");
             return true;
         }
 
