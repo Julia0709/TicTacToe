@@ -1,10 +1,11 @@
 package TicTacToe;
 
+import java.util.Random;
 import java.util.Scanner;
 
 class GameManager {
-    private char[][] board = new char[3][3];
-    private static final char[] SYMBOLS = {'O', 'X'};
+    private char[][] board = {{' ', ' ', ' '}, {' ', ' ', ' '}, {' ', ' ', ' '}};
+    private static final char[] SYMBOLS = {' ', 'O', 'X'};
     private int player;
 
     GameManager(int n) {
@@ -24,24 +25,22 @@ class GameManager {
 
         while (!gameFinish) {
 
-            int x = 0, y = 0;
+            int x, y;
             if (n == 2 && player == 2) {
                 System.out.println("COM: make your move");
-                x = COM();
-                y = COM();
+                x = makeRandomMove();
+                y = makeRandomMove();
             } else {
                 System.out.println("Player" + player + ": make your move");
                 Scanner scan = new Scanner(System.in);
                 x = scan.nextInt();
                 y = scan.nextInt();
+                if (!checkInput(x, y)) {
+                    continue;
+                }
             }
 
-            if (!checkInput(x, y)) {
-                continue;
-            }
-
-            int i = player - 1;
-            board[y][x] = SYMBOLS[i];
+            board[y][x] = SYMBOLS[player];
 
             displayBoard();
             gameFinish = judgeGame(board);
@@ -60,17 +59,21 @@ class GameManager {
         return 0;
     }
 
-    private int COM() {
-        return (int) (Math.random() * 100 % 3 + 1);
+    private int makeRandomMove() {
+        Random random = new Random();
+        return random.nextInt(3);
     }
 
     private void displayBoard() {
         for (int i = 0; i < 3; i++) {
+            System.out.println("+-----------+");
             for (int j = 0; j < 3; j++) {
-                System.out.printf(String.valueOf(board[i][j]));
+                System.out.printf("| " + String.valueOf(board[i][j]) + " ");
             }
+            System.out.printf("|");
             System.out.printf("\n");
         }
+        System.out.println("+-----------+");
     }
 
     private boolean checkInput(int x, int y) {
@@ -97,13 +100,13 @@ class GameManager {
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                if (board[i][j] == '\0') {
+                if (board[i][j] == ' ') {
                     System.out.println("Good!");
                     return false;
                 }
             }
         }
-        System.out.println("DRAW");
+        System.out.println("DRAW\nGAME OVER");
         return true;
     }
 }
